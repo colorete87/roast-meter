@@ -205,8 +205,6 @@ void setupEEPROM() {
     // a variable in psuedo-eeprom flash memory
     // use a variable with a type so that EEPROM
     // knows how much memory to use
-    uint8_t code_to_store = EEPROM_VALID_CODE;
-    EEPROM.put(EEPROM_VALID_IDX, code_to_store);
 
     // store default LED brightness value in EEPROM
     uint8_t led_brightness_to_store = EEPROM_LED_BRIGHTNESS_DEFAULT;
@@ -224,6 +222,11 @@ void setupEEPROM() {
     BLE.begin();
     String ble_name_to_store = "Roast Meter " + stringLastN(BLE.address(), 5);
     writeStringToEEPROM(EEPROM_BLE_NAME_IDX, ble_name_to_store);
+
+    // store the valid code last, so a reset during initialization
+    // leaves the EEPROM invalid and it is initialized again on next boot
+    uint8_t code_to_store = EEPROM_VALID_CODE;
+    EEPROM.put(EEPROM_VALID_IDX, code_to_store);
 
     Serial.println("EEPROM initialized");
   }
